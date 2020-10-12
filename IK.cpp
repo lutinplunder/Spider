@@ -24,7 +24,7 @@ double leg6XYZ[3] {-226.421, -451.949, 0};
 double leg7XYZ[3] {-485.512, 193.191, 0};
 double leg8XYZ[3] {-485.512, -193.191, 0};
 const double coxaLength = 62.2;// Length of coxa in mm
-double lengths[3] {149.828, 148.971, 140.1};// Length of femur, tibia & tarsus in mm.
+double lengths[] {149.828, 148.971, 140.1};// Length of femur, tibia & tarsus in mm.
 //extern double lengths
 
 int main() {
@@ -182,6 +182,8 @@ int main() {
     //rpy of Coxa8Z
     coxa8IK[2] = -(((coxaLength*cos(atan((leg8XYZ[1]-bodyIK8XYZ[1])/(leg8XYZ[0]-bodyIK8XYZ[0]))))-bodyIK8XYZ[0])*(-cos(roll*(M_PI/180))*sin(pitch*(M_PI/180))*cos(yaw*(M_PI/180))+sin(roll*(M_PI/180))*sin(yaw*(M_PI/180)))-((coxaLength*sin(atan((leg8XYZ[1]-bodyIK8XYZ[1])/(leg8XYZ[0]-bodyIK8XYZ[0]))))-bodyIK8XYZ[1])*(cos(roll*(M_PI/180))*sin(pitch*(M_PI/180))*sin(yaw*(M_PI/180))+sin(roll*(M_PI/180))*cos(yaw*(M_PI/180)))+(initialBody8XYZ[2])*cos(roll*(M_PI/180))*cos(pitch*(M_PI/180)))-bodyHeight;
 
+
+
     //output for leg IK solver. Leg IK is decoupled from y so we need to convert x,y to hypotenuse to use as x in leg frame.
     leg1IKxz[0] = sqrt(pow(leg1XYZ[0]-bodyIK1XYZ[0], 2)+pow(leg1XYZ[1]-bodyIK1XYZ[1], 2))-coxaLength;
     leg1IKxz[1] = coxa1IK[2];
@@ -201,19 +203,19 @@ int main() {
     leg8IKxz[1] = coxa8IK[2];
 
     //Leg IK
-    // For a 2DOF arm, we have 2 links and 2+1 joints,
+    // For a 3DOF arm, we have 2 links and 3+1 joints,
     // where the end effector counts as one joint in this case.
     Fabrik2D Fabrik2D(4, lengths); // 4 Joints in total
 
-    for (int i=0; leg1IKxz == leg1IKxz, i>30 ; i++ ) {
+    for (int i=0; leg1IKxz == leg1IKxz, i<2 ; i++ ) {
 
         // Solve IK,
         Fabrik2D.solve( leg1IKxz[0],  leg1IKxz[1], lengths);
 
         // Get the angles (in radians [-pi,pi]) and convert them to degrees [-180,180]
-        coxa1Angle = Fabrik2D.getAngle(0) * (M_PI/180); // In degrees;
-        femur1Angle = Fabrik2D.getAngle(1) * (M_PI/180); // In degrees;
-        tibia1Angle = Fabrik2D.getAngle(2) * (M_PI/180); // In degrees;
+        coxa1Angle = Fabrik2D.getAngle(0) * (180/M_PI); // In degrees;
+        femur1Angle = Fabrik2D.getAngle(1) * (180/M_PI); // In degrees;
+        tibia1Angle = Fabrik2D.getAngle(2) * (180/M_PI); // In degrees;
 
     }
     cout << leg1IKxz[0] << endl;
