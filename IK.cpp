@@ -63,7 +63,7 @@ int main() {
     double leg7IKxz[2] {0, 0};
     double leg8IKxz[2] {0, 0};
 
-    double test[3] {0, 0, 0};
+    //double test[3] {0, 0, 0};
 
     //Inverse Kinematics
     //BodyIK
